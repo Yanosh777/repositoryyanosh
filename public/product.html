@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product \u2014 ElectroHub</title>
+<meta name="description" content="Product details, specifications and reviews on ElectroHub.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo"><span class="dot">\u26A1</span> Electro<b>Hub</b></a>
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="Search components, boards, sensors..." aria-label="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" id="cartBtn">
+        \uD83D\uDED2 Cart
+        <span class="badge" id="badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Product detail (rendered by product.js) -->
+<main class="container" id="pd-root"></main>
+
+<!-- Features -->
+<section class="container features">
+  <div class="feature"><div class="ic">\uD83D\uDE9A</div><b>Free shipping</b><small>On orders over $50</small></div>
+  <div class="feature"><div class="ic">\uD83D\uDD12</div><b>Secure checkout</b><small>Encrypted payments</small></div>
+  <div class="feature"><div class="ic">\u21A9\uFE0F</div><b>30-day returns</b><small>Hassle-free policy</small></div>
+  <div class="feature"><div class="ic">\uD83D\uDCDE</div><b>Expert support</b><small>Engineers on call</small></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container foot-grid">
+    <div>
+      <a href="index.html" class="logo" style="margin-bottom:12px"><span class="dot">\u26A1</span> Electro<b>Hub</b></a>
+      <p style="max-width:300px">Your trusted source for electronic components, dev boards and lab tools. Built for makers, students and professional engineers.</p>
+    </div>
+    <div><h4>Shop</h4><ul><li>Dev Boards</li><li>Sensors</li><li>Passives</li><li>Tools</li></ul></div>
+    <div><h4>Support</h4><ul><li>Contact us</li><li>Shipping</li><li>Returns</li><li>FAQ</li></ul></div>
+    <div><h4>Company</h4><ul><li>About</li><li>Careers</li><li>Blog</li><li>Terms</li></ul></div>
+  </div>
+  <div class="container copy">\u00A9 2026 ElectroHub \u2014 Demo store. All product data is illustrative.</div>
+</footer>
+
+<!-- Cart drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="close" id="closeCart">\u00D7</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="sumline"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <div class="sumline"><span>Shipping</span><span id="shipping">FREE</span></div>
+    <div class="sumline total"><span>Total</span><span id="total">$0.00</span></div>
+    <button class="btn btn-primary" id="checkout" style="width:100%">Checkout</button>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Order modal -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="ic">\u2705</div>
+    <h3>Order placed!</h3>
+    <p>Thanks for your purchase. Your order <b id="orderId"></b> is confirmed and will ship within 24 hours.</p>
+    <button class="btn btn-primary" id="modalClose">Continue shopping</button>
+  </div>
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+<script src="product.js"></script>
+</body>
+</html>

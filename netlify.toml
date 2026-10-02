@@ -1,0 +1,20 @@
+# Netlify configuration for ElectroHub
+#
+# The website files live in the public/ folder (the Node backend sits
+# alongside them in the project root). This tells Netlify to publish the
+# contents of public/ as the site root, so https://your-site/ loads
+# public/index.html instead of showing "Page not found".
+#
+# NOTE: Netlify hosts STATIC files only. It serves the storefront, product
+# pages and admin page just fine, and the shop falls back to the 18
+# built-in products. But Netlify cannot run server.js, so admin login,
+# saving new products, and image uploads will NOT work on Netlify. For
+# those features, host the Node backend on a service that runs Node
+# (Render, Railway, Fly.io, a VPS, etc.).
+
+[build]
+  publish = "public"
+
+# No build step is needed — the site is plain HTML/CSS/JS.
+[build.environment]
+  NODE_VERSION = "16"

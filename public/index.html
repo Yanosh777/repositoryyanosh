@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElectroHub \u2014 Electronic Components Store</title>
+<meta name="description" content="Buy quality electronic components: dev boards, sensors, passives, power modules, tools and more.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container nav">
+    <a href="#" class="logo"><span class="dot">\u26A1</span> Electro<b>Hub</b></a>
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="Search components, boards, sensors..." aria-label="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </div>
+    <div class="nav-actions">
+      <a class="cart-btn" href="admin.html" style="text-decoration:none">\uD83D\uDEE0\uFE0F Admin</a>
+      <button class="cart-btn" id="cartBtn">
+        \uD83D\uDED2 Cart
+        <span class="badge" id="badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="container hero">
+  <div>
+    <h1>Everything to <span>build your next</span> electronics project</h1>
+    <p>From microcontrollers and sensors to resistors, capacitors and tools \u2014 genuine components, fast shipping, and fair prices for makers and engineers.</p>
+    <button class="btn btn-primary" id="shopNow">Shop components \u2192</button>
+    <button class="btn btn-ghost" style="margin-left:10px">Browse datasheets</button>
+  </div>
+  <div class="hero-card">
+    <div class="stat-grid">
+      <div class="stat"><b>18k+</b><br><small>SKUs in stock</small></div>
+      <div class="stat"><b>24h</b><br><small>Same-day dispatch</small></div>
+      <div class="stat"><b>99.2%</b><br><small>On-time delivery</small></div>
+      <div class="stat"><b>4.9\u2605</b><br><small>Customer rating</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- Catalog -->
+<section class="container" id="catalog">
+  <div id="cats" class="cats"></div>
+  <div class="section-head">
+    <h2>Shop by component</h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div id="grid" class="grid"></div>
+</section>
+
+<!-- Features -->
+<section class="container features">
+  <div class="feature"><div class="ic">\uD83D\uDE9A</div><b>Free shipping</b><small>On orders over $50</small></div>
+  <div class="feature"><div class="ic">\uD83D\uDD12</div><b>Secure checkout</b><small>Encrypted payments</small></div>
+  <div class="feature"><div class="ic">\u21A9\uFE0F</div><b>30-day returns</b><small>Hassle-free policy</small></div>
+  <div class="feature"><div class="ic">\uD83D\uDCDE</div><b>Expert support</b><small>Engineers on call</small></div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container foot-grid">
+    <div>
+      <a href="#" class="logo" style="margin-bottom:12px"><span class="dot">\u26A1</span> Electro<b>Hub</b></a>
+      <p style="max-width:300px">Your trusted source for electronic components, dev boards and lab tools. Built for makers, students and professional engineers.</p>
+    </div>
+    <div><h4>Shop</h4><ul><li>Dev Boards</li><li>Sensors</li><li>Passives</li><li>Tools</li></ul></div>
+    <div><h4>Support</h4><ul><li>Contact us</li><li>Shipping</li><li>Returns</li><li>FAQ</li></ul></div>
+    <div><h4>Company</h4><ul><li>About</li><li>Careers</li><li>Blog</li><li>Terms</li></ul></div>
+  </div>
+  <div class="container copy">\u00A9 2026 ElectroHub \u2014 Demo store. All product data is illustrative.</div>
+</footer>
+
+<!-- Cart drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="close" id="closeCart">\u00D7</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="sumline"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <div class="sumline"><span>Shipping</span><span id="shipping">FREE</span></div>
+    <div class="sumline total"><span>Total</span><span id="total">$0.00</span></div>
+    <button class="btn btn-primary" id="checkout" style="width:100%">Checkout</button>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Order modal -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="ic">\u2705</div>
+    <h3>Order placed!</h3>
+    <p>Thanks for your purchase. Your order <b id="orderId"></b> is confirmed and will ship within 24 hours.</p>
+    <button class="btn btn-primary" id="modalClose">Continue shopping</button>
+  </div>
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

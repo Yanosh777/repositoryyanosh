@@ -1,0 +1,30 @@
+# Render blueprint for the ElectroHub backend.
+# If you connect this repo to Render as a "Blueprint", Render reads this file
+# and sets everything up for you. (You can also configure it by hand in the
+# dashboard — see DEPLOY-RENDER.md.)
+services:
+  - type: web
+    name: electrohub
+    runtime: node
+    plan: free            # free works for testing; see note about data below
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "16"
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false         # set your own strong password in the dashboard
+      - key: JWT_SECRET
+        generateValue: true # Render creates a long random secret for you
+      - key: DATA_DIR
+        value: /var/data    # where the persistent disk is mounted (paid plans)
+    # A persistent disk keeps your added products + uploaded images safe
+    # across restarts/redeploys. Disks require a paid instance type.
+    # On the FREE plan, remove this 'disk' block and the DATA_DIR env var —
+    # just know that data resets whenever the service restarts.
+    disk:
+      name: electrohub-data
+      mountPath: /var/data
+      sizeGB: 1

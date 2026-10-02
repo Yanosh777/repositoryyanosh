@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard \u2014 ElectroHub</title>
+<meta name="description" content="Add and manage electronic parts in the ElectroHub store.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo"><span class="dot">\u26A1</span> Electro<b>Hub</b></a>
+    <div style="flex:1"></div>
+    <div class="nav-actions">
+      <a class="cart-btn" href="index.html" style="text-decoration:none">\uD83C\uDFEA View store</a>
+      <button class="cart-btn" id="logoutBtn" style="display:none">\uD83D\uDEAA Log out (<span id="whoami">admin</span>)</button>
+    </div>
+  </div>
+</header>
+
+<!-- Login view -->
+<main class="container login-wrap" id="loginView" style="display:none">
+  <section class="panel login-card">
+    <div class="login-ic">\uD83D\uDD10</div>
+    <h2>Admin sign in</h2>
+    <p class="sub">Enter your administrator credentials to manage the catalog.</p>
+    <form id="loginForm" autocomplete="off">
+      <div class="field">
+        <label for="loginUser">Username</label>
+        <input id="loginUser" type="text" autocomplete="username" placeholder="admin">
+      </div>
+      <div class="field">
+        <label for="loginPass">Password</label>
+        <input id="loginPass" type="password" autocomplete="current-password" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%">Sign in</button>
+      <div class="form-msg" id="loginMsg"></div>
+    </form>
+  </section>
+</main>
+
+<!-- Dashboard view -->
+<main class="container" id="dashView" style="display:none">
+  <div class="admin-head">
+    <div><h1>\uD83D\uDEE0\uFE0F Parts Dashboard</h1></div>
+    <span class="pill">Admin</span>
+    <p>Add new electronic parts with photos. Changes are saved on the server and appear instantly in the storefront.</p>
+  </div>
+
+  <div class="admin-stats">
+    <div class="stat"><b id="stTotal">0</b><br><small>Total products</small></div>
+    <div class="stat"><b id="stCustom">0</b><br><small>Parts you added</small></div>
+    <div class="stat"><b id="stCats">0</b><br><small>Categories</small></div>
+    <div class="stat"><b id="stOut">0</b><br><small>Out of stock</small></div>
+  </div>
+
+  <div class="admin-wrap">
+    <!-- Form -->
+    <section class="panel">
+      <h2 id="panelTitle">Add a new part</h2>
+      <p class="sub">Fields marked <span style="color:var(--danger)">*</span> are required.</p>
+      <form id="partForm" autocomplete="off">
+        <div class="field">
+          <label for="fName">Part name <span class="req">*</span></label>
+          <input id="fName" type="text" placeholder="e.g. BME280 Pressure Sensor" maxlength="80">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fCat">Category</label>
+            <select id="fCat"></select>
+          </div>
+          <div class="field">
+            <label for="fTag">Badge (optional)</label>
+            <input id="fTag" type="text" placeholder="e.g. New, Hot, Deal" maxlength="14">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fPrice">Price (USD) <span class="req">*</span></label>
+            <input id="fPrice" type="number" step="0.01" min="0" placeholder="0.00">
+          </div>
+          <div class="field">
+            <label for="fStock">Stock qty <span class="req">*</span></label>
+            <input id="fStock" type="number" step="1" min="0" placeholder="0">
+          </div>
+        </div>
+        <div class="field">
+          <label for="fSku">SKU (optional)</label>
+          <input id="fSku" type="text" placeholder="auto-generated if blank" maxlength="24">
+        </div>
+        <div class="field">
+          <label for="fDesc">Short description</label>
+          <input id="fDesc" type="text" placeholder="One-line summary shown on cards" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="fLong">Full description</label>
+          <textarea id="fLong" placeholder="Detailed description shown on the product page"></textarea>
+        </div>
+        <div class="field">
+          <label for="fSpecs">Specifications</label>
+          <textarea id="fSpecs" placeholder="One per line, as  Key: Value"></textarea>
+          <small>Enter one spec per line in the form <b>Key: Value</b>.</small>
+        </div>
+        <div class="field">
+          <label>Part photo</label>
+          <div class="dropzone" id="dropzone">
+            <div class="big">\uD83D\uDCF7</div>
+            <div><b>Click to upload</b> or drag &amp; drop</div>
+            <small>PNG or JPG \u00b7 resized &amp; uploaded to the server</small>
+          </div>
+          <input id="fileInput" type="file" accept="image/*" style="display:none">
+          <div class="img-preview" id="imgPreview">
+            <img alt="Preview">
+            <button type="button" class="clear" id="clearImg" title="Remove image">\u00D7</button>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">+ Add part</button>
+          <button type="button" class="btn btn-ghost" id="resetBtn">Clear</button>
+        </div>
+        <div class="form-msg" id="formMsg"></div>
+      </form>
+    </section>
+
+    <!-- List -->
+    <section class="panel admin-list">
+      <div class="section-head">
+        <h2>All products</h2>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr><th>Photo</th><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="container copy">\u00A9 2026 ElectroHub \u2014 Admin dashboard. Changes are saved on the server.</div>
+</footer>
+
+<script src="products.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
