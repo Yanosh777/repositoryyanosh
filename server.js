@@ -44,23 +44,35 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// ---- Uploads (disk storage, image-only, size-limited) ----
+// ---- Uploads (disk storage, size-limited) ----
+// Two kinds of files: product images (png/jpg/webp) and datasheets (PDF).
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, db.UPLOAD_DIR),
   filename: (req, file, cb) => {
-    const ext = (file.mimetype === 'image/png') ? '.png'
+    const ext = (file.mimetype === 'application/pdf') ? '.pdf'
+      : (file.mimetype === 'image/png') ? '.png'
       : (file.mimetype === 'image/webp') ? '.webp' : '.jpg';
     cb(null, Date.now() + '-' + crypto.randomBytes(4).toString('hex') + ext);
   }
 });
 const upload = multer({
   storage,
-  limits: { fileSize: 4 * 1024 * 1024 }, // 4 MB
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15 MB (datasheets can be large)
   fileFilter: (req, file, cb) => {
-    if(/^image\/(png|jpe?g|webp)$/.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Only PNG, JPG or WebP images are allowed.'));
+    if(file.fieldname === 'datasheet'){
+      if(file.mimetype === 'application/pdf') cb(null, true);
+      else cb(new Error('The datasheet must be a PDF file.'));
+    } else {
+      if(/^image\/(png|jpe?g|webp)$/.test(file.mimetype)) cb(null, true);
+      else cb(new Error('Only PNG, JPG or WebP images are allowed.'));
+    }
   }
 });
+// Accept one image and one datasheet per request.
+const uploadFields = upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'datasheet', maxCount: 1 }
+]);
 
 // ---- Auth helpers ----
 function signToken(user){ return jwt.sign({ u: user.username }, SECRET, { expiresIn: TOKEN_TTL }); }
@@ -139,8 +151,9 @@ function autoSku(name){
   return 'EH-' + String(name).toUpperCase().replace(/[^A-Z0-9]+/g, '').slice(0, 6) + '-' +
     crypto.randomBytes(2).toString('hex').toUpperCase();
 }
-function uploadedPath(req){
-  return req.file ? '/uploads/' + path.basename(req.file.path) : null;
+function uploadedPath(req, field){
+  const f = req.files && req.files[field] && req.files[field][0];
+  return f ? '/uploads/' + path.basename(f.path) : null;
 }
 function removeUpload(imgPath){
   if(imgPath && imgPath.indexOf('/uploads/') === 0){
@@ -149,16 +162,18 @@ function removeUpload(imgPath){
   }
 }
 
-app.post('/api/products', requireAuth, upload.single('image'), (req, res) => {
+app.post('/api/products', requireAuth, uploadFields, (req, res) => {
   const data = parseBody(req);
   if(!data.name) return res.status(400).json({ error: 'Name is required.' });
-  const img = uploadedPath(req);
+  const img = uploadedPath(req, 'image');
   if(img) data.img = img;
+  const sheet = uploadedPath(req, 'datasheet');
+  data.datasheet = sheet || null;
   const created = db.create(data);
   res.status(201).json(created);
 });
 
-app.put('/api/products/:id', requireAuth, upload.single('image'), (req, res) => {
+app.put('/api/products/:id', requireAuth, uploadFields, (req, res) => {
   const id = parseInt(req.params.id, 10);
   const existing = db.get(id);
   if(!existing) return res.status(404).json({ error: 'Not found.' });
@@ -169,7 +184,7 @@ app.put('/api/products/:id', requireAuth, upload.single('image'), (req, res) => 
   data.rating = existing.rating != null ? existing.rating : 4.5;
   data.reviews = existing.reviews != null ? existing.reviews : 0;
   if(existing.icon) data.icon = existing.icon;
-  const newImg = uploadedPath(req);
+  const newImg = uploadedPath(req, 'image');
   if(newImg){
     removeUpload(existing.img); // replace
     data.img = newImg;
@@ -178,6 +193,16 @@ app.put('/api/products/:id', requireAuth, upload.single('image'), (req, res) => 
   } else {
     data.img = null; // image was cleared
     removeUpload(existing.img);
+  }
+  const newSheet = uploadedPath(req, 'datasheet');
+  if(newSheet){
+    removeUpload(existing.datasheet); // replace
+    data.datasheet = newSheet;
+  } else if(req.body.keepDatasheet === '1'){
+    data.datasheet = existing.datasheet || null;
+  } else {
+    data.datasheet = null; // datasheet was cleared
+    removeUpload(existing.datasheet);
   }
   const updated = db.update(id, data);
   res.json(updated);
@@ -188,6 +213,7 @@ app.delete('/api/products/:id', requireAuth, (req, res) => {
   const removed = db.remove(id);
   if(!removed) return res.status(404).json({ error: 'Not found.' });
   removeUpload(removed.img);
+  removeUpload(removed.datasheet);
   res.json({ ok: true });
 });
 

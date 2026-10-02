@@ -46,6 +46,7 @@ function renderProducts(){
           <div class="price">${fmt(p.price)} <small>/ unit</small></div>
           <div class="${st}">${lbl}</div>
         </div>
+        ${p.datasheet ? `<a class="datasheet-link" href="${imgSrc(p.datasheet)}" target="_blank" rel="noopener">📄 Datasheet (PDF)</a>` : ''}
         <button class="btn btn-primary add" data-id="${p.id}" ${p.stock===0?'disabled':''}>
           ${p.stock===0?'Unavailable':'Add to cart'}
         </button>

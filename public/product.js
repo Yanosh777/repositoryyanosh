@@ -92,6 +92,7 @@ function renderDetail(){
           </button>
           <button class="btn btn-ghost" id="pdBuy" ${p.stock===0?'disabled':''}>Buy now</button>
         </div>
+        ${p.datasheet ? `<a class="btn btn-datasheet" href="${imgSrc(p.datasheet)}" target="_blank" rel="noopener">📄 View datasheet (PDF)</a>` : ''}
 
         <div class="pd-meta">
           <div>SKU: <b>${esc(p.sku)}</b></div>
@@ -112,6 +113,7 @@ function renderDetail(){
       <p class="pd-long" style="max-width:760px">${esc(p.desc)}</p>
     </div>
     <div class="tab-panel" id="tab-specs">
+      ${p.datasheet ? `<p style="margin:0 0 14px"><a class="btn btn-datasheet" href="${imgSrc(p.datasheet)}" target="_blank" rel="noopener">📄 Open full datasheet (PDF)</a></p>` : ''}
       <table class="spec-table"><tbody>${specRows}</tbody></table>
     </div>
     <div class="tab-panel" id="tab-reviews">${reviewsHtml}</div>

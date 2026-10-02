@@ -9,6 +9,8 @@ let imageBlob = null;      // new image to upload (Blob) or null
 let imageDataUrl = '';     // preview data URL
 let editingId = null;
 let keepExistingImg = false;
+let datasheetFile = null;    // new PDF datasheet to upload (File) or null
+let keepExistingSheet = false;
 
 const $a = s => document.querySelector(s);
 function escA(s){ const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
@@ -120,6 +122,27 @@ function clearImage(){
   $a('#fileInput').value = '';
 }
 
+// ---------- Datasheet (PDF) handling ----------
+function handleSheet(file){
+  const msg = $a('#formMsg');
+  if(!file) return;
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  if(!isPdf){ msg.textContent = 'The datasheet must be a PDF file.'; msg.className = 'form-msg bad'; return; }
+  if(file.size > 15 * 1024 * 1024){ msg.textContent = 'The datasheet is too large (max 15 MB).'; msg.className = 'form-msg bad'; return; }
+  datasheetFile = file; keepExistingSheet = false;
+  $a('#sheetName').textContent = file.name;
+  $a('#sheetChip').style.display = 'flex';
+  $a('#sheetDrop').style.display = 'none';
+  msg.className = 'form-msg';
+}
+
+function clearSheet(){
+  datasheetFile = null; keepExistingSheet = false;
+  $a('#sheetChip').style.display = 'none';
+  $a('#sheetDrop').style.display = 'block';
+  $a('#sheetInput').value = '';
+}
+
 // ---------- Specs ----------
 function parseSpecs(text){
   return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
@@ -202,6 +225,8 @@ async function saveProduct(e){
   fd.append('specs', JSON.stringify(parseSpecs(fieldVal('fSpecs'))));
   if(imageBlob) fd.append('image', imageBlob, 'part.jpg');
   if(editingId != null) fd.append('keepImage', keepExistingImg ? '1' : '0');
+  if(datasheetFile) fd.append('datasheet', datasheetFile, datasheetFile.name || 'datasheet.pdf');
+  if(editingId != null) fd.append('keepDatasheet', keepExistingSheet ? '1' : '0');
 
   const submitBtn = $a('#submitBtn');
   submitBtn.disabled = true;
@@ -245,6 +270,13 @@ function startEdit(id){
     $a('#imgPreview').classList.add('show');
     $a('#dropzone').style.display = 'none';
   } else { clearImage(); }
+  datasheetFile = null;
+  if(p.datasheet){
+    keepExistingSheet = true;
+    $a('#sheetName').textContent = 'Current datasheet (PDF)';
+    $a('#sheetChip').style.display = 'flex';
+    $a('#sheetDrop').style.display = 'none';
+  } else { clearSheet(); }
   $a('#submitBtn').textContent = 'Save changes';
   $a('#panelTitle').textContent = 'Edit part';
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -263,6 +295,7 @@ async function deleteProduct(id){
 function resetForm(){
   $a('#partForm').reset();
   clearImage();
+  clearSheet();
   editingId = null;
   $a('#submitBtn').textContent = '+ Add part';
   $a('#panelTitle').textContent = 'Add a new part';
@@ -281,6 +314,14 @@ function initAdmin(){
   dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
   dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
   $a('#clearImg').onclick = clearImage;
+
+  const sd = $a('#sheetDrop'); const si = $a('#sheetInput');
+  sd.onclick = () => si.click();
+  si.onchange = () => { if(si.files[0]) handleSheet(si.files[0]); };
+  sd.addEventListener('dragover', e => { e.preventDefault(); sd.classList.add('drag'); });
+  sd.addEventListener('dragleave', () => sd.classList.remove('drag'));
+  sd.addEventListener('drop', e => { e.preventDefault(); sd.classList.remove('drag'); if(e.dataTransfer.files[0]) handleSheet(e.dataTransfer.files[0]); });
+  $a('#clearSheet').onclick = clearSheet;
   $a('#partForm').onsubmit = saveProduct;
   $a('#resetBtn').onclick = resetForm;
   $a('#loginForm').onsubmit = doLogin;

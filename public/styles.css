@@ -268,3 +268,22 @@ footer li:hover{color:var(--brand)}
 .login-card h2{font-size:1.4rem;margin-bottom:4px}
 .login-card form{text-align:left;margin-top:18px}
 .login-card .field label{text-align:left}
+
+/* ===== Datasheet buttons ===== */
+.datasheet-link{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;
+  font-size:.82rem;font-weight:600;color:var(--acc,#38bdf8);text-decoration:none;
+  padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);
+  transition:background .15s,border-color .15s}
+.datasheet-link:hover{background:var(--panel);border-color:var(--acc,#38bdf8)}
+.btn-datasheet{display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  background:var(--panel2);border:1px solid var(--line);color:var(--txt);text-decoration:none}
+.btn-datasheet:hover{border-color:var(--acc,#38bdf8);color:var(--acc,#38bdf8)}
+
+/* Admin: selected datasheet chip */
+.sheet-chip{align-items:center;gap:10px;margin-top:10px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.sheet-chip .big{font-size:1.3rem}
+.sheet-chip .sheet-name{flex:1;font-size:.85rem;word-break:break-all}
+.sheet-chip .clear{border:none;background:transparent;color:var(--mut);cursor:pointer;
+  font-size:1.1rem;line-height:1;padding:4px 8px;border-radius:6px}
+.sheet-chip .clear:hover{color:#fff;background:rgba(255,255,255,.08)}
