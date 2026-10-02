@@ -12,7 +12,7 @@ const db = require('./db');
 
 const PORT = process.env.PORT || 3000;
 
-const HOST = process.HOST||'0.0.0.0';
+const HOST = '0.0.0.0';
 const SECURE_COOKIES = process.env.SECURE_COOKIES === '1'; // enable behind HTTPS
 const TOKEN_TTL = '7d';
 
