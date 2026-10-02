@@ -198,6 +198,6 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(PORT, 0.0.0.0, () => {
+app.listen(process.env.PORT, 0.0.0.0, () =&gt {
   console.log('ElectroHub running at http://' + HOST + ':' + PORT);
 });
