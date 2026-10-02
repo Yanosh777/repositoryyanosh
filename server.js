@@ -11,8 +11,8 @@ const multer = require('multer');
 const db = require('./db');
 
 const PORT = process.env.PORT || 3000;
-
-const HOST = '0.0.0.0';
+const HOST = process.env.HOST || '127.0.0.1'; // bind locally by default; set 0.0.0.0 behind a proxy
+const COOKIE = 'eh_token';
 const SECURE_COOKIES = process.env.SECURE_COOKIES === '1'; // enable behind HTTPS
 const TOKEN_TTL = '7d';
 
@@ -198,6 +198,6 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.listen(process.env.PORT, 0.0.0.0, () =&gt {
+app.listen(PORT, HOST, () => {
   console.log('ElectroHub running at http://' + HOST + ':' + PORT);
 });

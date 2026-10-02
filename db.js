@@ -6,7 +6,9 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const DATA_DIR = path.join(__dirname, 'data');
+// DATA_DIR can be overridden via env so a hosting provider's persistent
+// disk (e.g. a Render Disk mounted at /var/data) survives restarts/deploys.
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
 
