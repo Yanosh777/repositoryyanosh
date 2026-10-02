@@ -45,6 +45,10 @@ You need:
 
    > Your login will be whatever you put in `ADMIN_USER` / `ADMIN_PASSWORD`
    > here — **not** `admin123` anymore. Pick something only you know.
+   >
+   > **Do NOT add a `PORT` variable.** Render sets the port automatically and
+   > the server reads it. (The server binds to `0.0.0.0` by default so Render
+   > can detect the open port — you don't need to configure anything for this.)
 
 5. **Click "Create Web Service."** Render installs the packages and starts the
    server. The first deploy takes a couple of minutes. When it's done you'll
@@ -109,6 +113,10 @@ for everything — it serves both the shop and the admin.
 - **Login says "Cannot reach the server":** the service may be asleep (free
   plan sleeps after inactivity). Reload once — the first request wakes it up
   (can take ~30 seconds).
+- **Deploy log loops on "No open ports detected on 0.0.0.0":** make sure you
+  did NOT set a `PORT` environment variable, and that you're running the
+  latest code (the server binds to `0.0.0.0` and uses Render's port). Then
+  trigger a redeploy (Manual Deploy -> Clear build cache & deploy).
 - **Login rejected:** double-check `ADMIN_USER` / `ADMIN_PASSWORD` in the
   Render dashboard match what you're typing. Changing them requires a redeploy.
 - **Added products disappeared:** that's the free-plan temporary disk — add a

@@ -11,7 +11,10 @@ const multer = require('multer');
 const db = require('./db');
 
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '127.0.0.1'; // bind locally by default; set 0.0.0.0 behind a proxy
+// Hosting providers (Render, Railway, Fly.io, etc.) require binding to
+// 0.0.0.0 so their platform can detect the open port. That is the default
+// here. Set HOST=127.0.0.1 only if you want to restrict to localhost.
+const HOST = process.env.HOST || '0.0.0.0';
 const COOKIE = 'eh_token';
 const SECURE_COOKIES = process.env.SECURE_COOKIES === '1'; // enable behind HTTPS
 const TOKEN_TTL = '7d';
