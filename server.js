@@ -11,7 +11,7 @@ const multer = require('multer');
 const db = require('./db');
 
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '127.0.0.1'; // bind locally by default; set 0.0.0.0 behind a proxy
+
 const HOST = process.HOST||'0.0.0.0';
 const SECURE_COOKIES = process.env.SECURE_COOKIES === '1'; // enable behind HTTPS
 const TOKEN_TTL = '7d';
